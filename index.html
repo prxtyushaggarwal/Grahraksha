@@ -1,1 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrahRaksha - Landslide Risk Early-Warning System</title>
+    <meta name="description" content="GrahRaksha: AI-powered Landslide Risk Early-Warning System for India's mountain corridors. Real-time hazard monitoring, predictive analytics, and community safety alerts.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0a0f1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: #1f2937;
+            --gradient-1: linear-gradient(135deg, #10b981, #059669);
+            --gradient-2: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-hero: linear-gradient(180deg, rgba(10,15,26,0) 0%, #0a0f1a 100%);
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Navbar ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 15, 26, 0.8);
+            border-bottom: 1px solid rgba(31, 41, 55, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .nav-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .nav-title span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--primary-light); }
+
+        .nav-cta {
+            padding: 0.5rem 1.25rem;
+            background: var(--gradient-1);
+            color: #fff !important;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .nav-cta:hover { opacity: 0.9; }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59,130,246,0.08), transparent);
+        }
+
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up 6s infinite;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat { text-align: center; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.25rem;
+        }
+
+        /* ── Section Styles ── */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── Features ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-icon.green { background: rgba(16, 185, 129, 0.15); }
+        .feature-icon.blue { background: rgba(59, 130, 246, 0.15); }
+        .feature-icon.amber { background: rgba(245, 158, 11, 0.15); }
+        .feature-icon.red { background: rgba(239, 68, 68, 0.15); }
+        .feature-icon.purple { background: rgba(139, 92, 246, 0.15); }
+        .feature-icon.cyan { background: rgba(6, 182, 212, 0.15); }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ── Architecture ── */
+        .architecture {
+            background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(17, 24, 39, 0.5) 50%, var(--bg-dark) 100%);
+        }
+
+        .arch-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .arch-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .arch-layer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .arch-layer-label {
+            min-width: 120px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+        }
+
+        .arch-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .arch-chip {
+            padding: 0.4rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .arch-arrow {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        /* ── Problem Statement ── */
+        .problem {
+            background: var(--bg-dark);
+        }
+
+        .problem-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(59,130,246,0.05));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+        }
+
+        .problem-id {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .problem-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .problem-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .highlight-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .highlight-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ── Tech Stack ── */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tech-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tech-item:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tech-item-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-item h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .tech-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Team ── */
+        .team-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .team-info {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+        }
+
+        .team-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-info p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .team-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .team-link {
+            padding: 0.6rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .team-link:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            nav { padding: 0.75rem 1rem; }
+            .nav-links { display: none; }
+            .hero-stats { flex-direction: column; gap: 1.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .arch-layer { flex-direction: column; text-align: center; }
+            .problem-card { padding: 2rem; }
+            .problem-highlights { grid-template-columns: 1fr; }
+        }
+
+        /* ── Animations ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="#" class="nav-brand">
+            <div class="nav-logo">🏔️</div>
+            <div class="nav-title">Grah<span>Raksha</span></div>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#tech">Tech Stack</a></li>
+            <li><a href="https://github.com/pratyushaggarwal/Grahraksha" class="nav-cta">GitHub →</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <div class="dot"></div>
+                SIH 2026 — Problem Statement SIH26001
+            </div>
+            <h1>
+                <span class="gradient-text">GrahRaksha</span><br>
+                Landslide Risk<br>Early-Warning System
+            </h1>
+            <p>
+                AI-powered multi-model prediction engine with real-time geospatial monitoring 
+                for India's mountain corridors. Protecting lives through early detection, 
+                community alerts, and intelligent route planning.
+            </p>
+            <div class="hero-buttons">
+                <a href="https://github.com/pratyushaggarwal/Grahraksha" class="btn btn-primary">
+                    ⭐ View on GitHub
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    Explore Features ↓
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">5+</div>
+                    <div class="stat-label">ML Models</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">72h</div>
+                    <div class="stat-label">Forecast Window</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">3D</div>
+                    <div class="stat-label">Globe Visualization</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">Real-time</div>
+                    <div class="stat-label">Hazard Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="section-header fade-in">
+            <div class="section-tag">Core Capabilities</div>
+            <h2 class="section-title">Intelligent Hazard Detection</h2>
+            <p class="section-desc">A comprehensive platform combining machine learning, geospatial analytics, and community engagement.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon green">🧠</div>
+                <h3>Multi-Model ML Engine</h3>
+                <p>Ensemble of 5+ machine learning models including XGBoost, Random Forest, and deep learning networks for accurate landslide risk prediction.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon blue">🌍</div>
+                <h3>3D Globe Visualization</h3>
+                <p>Interactive CesiumJS-powered 3D globe with real-time hazard markers, terrain analysis, and satellite imagery overlays for mountain corridors.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon amber">⚡</div>
+                <h3>Real-time Alert System</h3>
+                <p>Geofence-based subscriber alerts with SHA-256 OTP verification, email dispatch, and community reporting for rapid hazard response.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon red">🗺️</div>
+                <h3>Safe Route Planning</h3>
+                <p>AI-driven route optimization that avoids high-risk zones, with real-time weather integration and alternate path suggestions.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon purple">🤖</div>
+                <h3>AI Safety Advisor</h3>
+                <p>LLM-powered conversational advisor providing contextual safety recommendations, risk assessments, and emergency guidance.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon cyan">📊</div>
+                <h3>Assam Geospatial Pipeline</h3>
+                <p>Specialized regional analytics for Northeast India with district-level risk mapping, historical data analysis, and vulnerability scoring.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="architecture">
+        <div class="section-header fade-in">
+            <div class="section-tag">System Design</div>
+            <h2 class="section-title">Architecture Overview</h2>
+            <p class="section-desc">Full-stack architecture built for scalability, real-time processing, and reliability.</p>
+        </div>
+        <div class="arch-container">
+            <div class="arch-flow fade-in">
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Frontend</div>
+                    <div class="arch-items">
+                        <span class="arch-chip">Next.js</span>
+                        <span class="arch-chip">React</span>
+                        <span class="arch-chip">TypeScript</span>
+                        <span class="arch-chip">CesiumJS</span>
+                        <span class="arch-chip">Tailwind CSS</span>
+                    </div>
+                </div>
+                <div class="arch-arrow">↕</div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">API Layer</div>
+                    <div class="arch-items">
+                        <span class="arch-chip">FastAPI</span>
+                        <span class="arch-chip">REST API</span>
+                        <span class="arch-chip">CORS Middleware</span>
+                        <span class="arch-chip">Pydantic</span>
+                    </div>
+                </div>
+                <div class="arch-arrow">↕</div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">ML Engine</div>
+                    <div class="arch-items">
+                        <span class="arch-chip">Scikit-learn</span>
+                        <span class="arch-chip">XGBoost</span>
+                        <span class="arch-chip">NumPy</span>
+                        <span class="arch-chip">Ensemble Models</span>
+                    </div>
+                </div>
+                <div class="arch-arrow">↕</div>
+                <div class="arch-layer">
+                    <div class="arch-layer-label">Data Layer</div>
+                    <div class="arch-items">
+                        <span class="arch-chip">SQLAlchemy</span>
+                        <span class="arch-chip">SQLite</span>
+                        <span class="arch-chip">GeoJSON</span>
+                        <span class="arch-chip">OpenRouter API</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement Section -->
+    <section id="problem" class="problem">
+        <div class="section-header fade-in">
+            <div class="section-tag">SIH 2026</div>
+            <h2 class="section-title">Problem Statement</h2>
+        </div>
+        <div class="problem-container fade-in">
+            <div class="problem-card">
+                <div class="problem-id">SIH26001</div>
+                <h3>Landslide Risk Early-Warning System for India's Mountain Corridors</h3>
+                <p>
+                    India's mountainous regions face significant landslide threats during monsoons, 
+                    affecting millions of lives and critical infrastructure. GrahRaksha addresses this 
+                    challenge by combining real-time weather data, geological surveys, satellite imagery, 
+                    and machine learning to provide actionable early warnings to at-risk communities.
+                </p>
+                <div class="problem-highlights">
+                    <div class="highlight-item">
+                        <div class="highlight-icon">🏔️</div>
+                        <div class="highlight-text">Mountain corridor monitoring across India</div>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-icon">📡</div>
+                        <div class="highlight-text">Real-time satellite & weather integration</div>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-icon">🔔</div>
+                        <div class="highlight-text">Community-level early warning alerts</div>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-icon">🛡️</div>
+                        <div class="highlight-text">Predictive risk assessment engine</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section id="tech">
+        <div class="section-header fade-in">
+            <div class="section-tag">Built With</div>
+            <h2 class="section-title">Technology Stack</h2>
+            <p class="section-desc">Modern, battle-tested technologies for reliability and performance.</p>
+        </div>
+        <div class="tech-grid fade-in">
+            <div class="tech-item">
+                <div class="tech-item-icon">⚡</div>
+                <h4>FastAPI</h4>
+                <p>Backend API</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">⚛️</div>
+                <h4>Next.js + React</h4>
+                <p>Frontend UI</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">🌐</div>
+                <h4>CesiumJS</h4>
+                <p>3D Globe</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">🧠</div>
+                <h4>Scikit-learn</h4>
+                <p>ML Models</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">🗄️</div>
+                <h4>SQLAlchemy</h4>
+                <p>ORM & Database</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">🔷</div>
+                <h4>TypeScript</h4>
+                <p>Type Safety</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">🎨</div>
+                <h4>Tailwind CSS</h4>
+                <p>Styling</p>
+            </div>
+            <div class="tech-item">
+                <div class="tech-item-icon">🐍</div>
+                <h4>Python</h4>
+                <p>Core Engine</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team">
+        <div class="team-container fade-in">
+            <div class="team-info">
+                <h3>Built for Smart India Hackathon 2026</h3>
+                <p>An innovative solution for landslide risk mitigation and community safety across India's mountain corridors.</p>
+                <div class="team-links">
+                    <a href="https://github.com/pratyushaggarwal/Grahraksha" class="team-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        Source Code
+                    </a>
+                    <a href="https://github.com/pratyushaggarwal" class="team-link">
+                        👤 pratyushaggarwal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 GrahRaksha — Landslide Risk Early-Warning System | Built with ❤️ for <a href="#">SIH 2026</a></p>
+    </footer>
+
+    <script>
+        // Scroll animation observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Particle generator
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (4 + Math.random() * 4) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
