@@ -1,945 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrahRaksha - Landslide Risk Early-Warning System</title>
-    <meta name="description" content="GrahRaksha: AI-powered Landslide Risk Early-Warning System for India's mountain corridors. Real-time hazard monitoring, predictive analytics, and community safety alerts.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --primary-light: #34d399;
-            --accent: #f59e0b;
-            --danger: #ef4444;
-            --bg-dark: #0a0f1a;
-            --bg-card: #111827;
-            --bg-card-hover: #1f2937;
-            --text-primary: #f9fafb;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --border: #1f2937;
-            --gradient-1: linear-gradient(135deg, #10b981, #059669);
-            --gradient-2: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --gradient-hero: linear-gradient(180deg, rgba(10,15,26,0) 0%, #0a0f1a 100%);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* ── Navbar ── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(20px);
-            background: rgba(10, 15, 26, 0.8);
-            border-bottom: 1px solid rgba(31, 41, 55, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .nav-logo {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .nav-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .nav-title span { color: var(--primary); }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover { color: var(--primary-light); }
-
-        .nav-cta {
-            padding: 0.5rem 1.25rem;
-            background: var(--gradient-1);
-            color: #fff !important;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .nav-cta:hover { opacity: 0.9; }
-
-        /* ── Hero ── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,0.15), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59,130,246,0.08), transparent);
-        }
-
-        .hero-particles {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float-up 6s infinite;
-        }
-
-        @keyframes float-up {
-            0% { opacity: 0; transform: translateY(100vh) scale(0); }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 900px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 1rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 50px;
-            font-size: 0.85rem;
-            color: var(--primary-light);
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .hero h1 .gradient-text {
-            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 650px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.85rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--gradient-1);
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--primary);
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .stat { text-align: center; }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary-light);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 0.25rem;
-        }
-
-        /* ── Section Styles ── */
-        section {
-            padding: 6rem 2rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-tag {
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 4vw, 2.75rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-        }
-
-        .section-desc {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* ── Features ── */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gradient-1);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .feature-card:hover {
-            border-color: rgba(16, 185, 129, 0.3);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .feature-card:hover::before { opacity: 1; }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .feature-icon.green { background: rgba(16, 185, 129, 0.15); }
-        .feature-icon.blue { background: rgba(59, 130, 246, 0.15); }
-        .feature-icon.amber { background: rgba(245, 158, 11, 0.15); }
-        .feature-icon.red { background: rgba(239, 68, 68, 0.15); }
-        .feature-icon.purple { background: rgba(139, 92, 246, 0.15); }
-        .feature-icon.cyan { background: rgba(6, 182, 212, 0.15); }
-
-        .feature-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* ── Architecture ── */
-        .architecture {
-            background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(17, 24, 39, 0.5) 50%, var(--bg-dark) 100%);
-        }
-
-        .arch-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .arch-flow {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .arch-layer {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .arch-layer-label {
-            min-width: 120px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--primary);
-        }
-
-        .arch-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .arch-chip {
-            padding: 0.4rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .arch-arrow {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-        }
-
-        /* ── Problem Statement ── */
-        .problem {
-            background: var(--bg-dark);
-        }
-
-        .problem-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .problem-card {
-            background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(59,130,246,0.05));
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 20px;
-            padding: 3rem;
-        }
-
-        .problem-id {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: rgba(16, 185, 129, 0.15);
-            border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--primary-light);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .problem-card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .problem-card p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            font-size: 1.05rem;
-        }
-
-        .problem-highlights {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(16, 185, 129, 0.15);
-        }
-
-        .highlight-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .highlight-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: rgba(16, 185, 129, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .highlight-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* ── Tech Stack ── */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.25rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .tech-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .tech-item:hover {
-            border-color: rgba(16, 185, 129, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .tech-item-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .tech-item h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .tech-item p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* ── Team ── */
-        .team-container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .team-info {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2.5rem;
-        }
-
-        .team-info h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .team-info p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .team-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .team-link {
-            padding: 0.6rem 1.25rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .team-link:hover {
-            border-color: var(--primary);
-            color: var(--primary-light);
-        }
-
-        /* ── Footer ── */
-        footer {
-            padding: 3rem 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        footer p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            nav { padding: 0.75rem 1rem; }
-            .nav-links { display: none; }
-            .hero-stats { flex-direction: column; gap: 1.5rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .arch-layer { flex-direction: column; text-align: center; }
-            .problem-card { padding: 2rem; }
-            .problem-highlights { grid-template-columns: 1fr; }
-        }
-
-        /* ── Animations ── */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrahRaksha v2.0 - Landslide Risk Early-Warning System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Widgets/widgets.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0b1120;--bg2:#111827;--bg3:#1e293b;--border:#1e293b;--cyan:#22d3ee;--emerald:#34d399;--amber:#fbbf24;--rose:#fb7185;--blue:#60a5fa;--purple:#a78bfa;--orange:#fb923c;--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;font-size:14px}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+
+/* Header */
+.header{background:rgba(11,17,32,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#06b6d4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.brand{display:flex;flex-direction:column}
+.brand-name{font-size:16px;font-weight:800;color:#fff}
+.brand-name span{color:var(--cyan)}
+.brand-sub{font-size:10px;color:var(--text3);letter-spacing:.5px}
+.badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid rgba(34,211,238,.3)}
+.header-right{display:flex;gap:8px}
+.header-btn{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s}
+.header-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.header-btn.primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none}
+.header-btn.danger{background:rgba(239,68,68,.15);color:var(--rose);border-color:rgba(239,68,68,.3)}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;padding:8px 20px;background:var(--bg);border-bottom:1px solid var(--border)}
+.tab{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;border:none;background:transparent}
+.tab:hover{color:var(--text2);background:var(--bg2)}
+.tab.active{background:linear-gradient(135deg,rgba(34,211,238,.15),rgba(16,185,129,.1));color:var(--cyan);border:1px solid rgba(34,211,238,.2)}
+.tab-indicator{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text3);margin-left:auto;padding-right:20px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Main Content */
+.main{padding:16px 20px;display:flex;flex-direction:column;gap:16px}
+
+/* Tab Panels */
+.panel{display:none}
+.panel.active{display:block}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.card-badge{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3)}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* Banner */
+.banner{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(6,182,212,.08),rgba(30,41,59,.5));border:1px solid rgba(34,211,238,.2);border-radius:14px;padding:20px 24px;position:relative;overflow:hidden}
+.banner::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(34,211,238,.06),transparent);border-radius:50%}
+.banner-tags{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.banner-tag{padding:3px 10px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.banner-tag.green{background:rgba(16,185,129,.15);color:var(--emerald);border:1px solid rgba(16,185,129,.3)}
+.banner-tag.cyan{background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid rgba(34,211,238,.3)}
+.banner h2{font-size:18px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px}
+.banner p{font-size:11px;color:var(--text2);margin-top:6px;max-width:700px;line-height:1.6}
+.banner-stat{text-align:right}
+.banner-stat-val{font-size:28px;font-weight:900;color:var(--cyan);font-family:'JetBrains Mono',monospace}
+.banner-stat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+
+/* Model Cards */
+.model-card{background:rgba(15,23,42,.9);border:1px solid var(--border);border-radius:12px;padding:14px}
+.model-icon{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.model-dot{width:8px;height:8px;border-radius:50%}
+.model-card h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text)}
+.model-card p{font-size:11px;color:var(--text3);margin:6px 0 8px;line-height:1.5}
+.model-status{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--emerald);font-weight:600;display:flex;align-items:center;gap:4px}
+
+/* Progress Bars */
+.progress-item{margin-bottom:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.progress-name{color:var(--text2)}
+.progress-val{font-family:'JetBrains Mono',monospace;font-weight:700}
+.progress-bar{width:100%;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width 1.5s ease}
+.progress-fill.orange{background:var(--orange)}
+.progress-fill.amber{background:var(--amber)}
+.progress-fill.rose{background:var(--rose)}
+.progress-fill.cyan{background:var(--cyan)}
+.progress-fill.emerald{background:var(--emerald)}
+.progress-fill.blue{background:var(--blue)}
+
+/* District Rows */
+.dist-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0}
+.dist-name{color:var(--text2);font-weight:500}
+.dist-val{font-family:'JetBrains Mono',monospace;color:var(--cyan);font-weight:600;font-size:11px}
+.dist-bar{width:100%;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:2px}
+.dist-bar-fill{height:100%;background:var(--cyan);border-radius:3px}
+
+/* LULC Items */
+.lulc-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(15,23,42,.6);border:1px solid rgba(30,41,59,.8);border-radius:8px;font-size:12px}
+.lulc-name{color:var(--text2)}
+.lulc-badge{padding:2px 10px;background:var(--bg3);border-radius:4px;font-family:'JetBrains Mono',monospace;color:var(--emerald);font-weight:600;font-size:11px}
+
+/* Metrics Row */
+.metrics-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid var(--border);margin-top:4px}
+.metric-box{padding:8px;background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:8px;text-align:center}
+.metric-label{font-size:9px;color:var(--text3);display:block;margin-bottom:2px}
+.metric-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
+
+/* Hazard Cards */
+.hazard-card{background:rgba(15,23,42,.7);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s}
+.hazard-card:hover{border-color:rgba(34,211,238,.4);background:rgba(30,41,59,.5)}
+.hazard-top{display:flex;justify-content:space-between;align-items:start;margin-bottom:6px}
+.hazard-title{font-size:12px;font-weight:700;color:#fff;flex:1}
+.severity-badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap}
+.severity-badge.severe{background:rgba(239,68,68,.15);color:var(--rose);border:1px solid rgba(239,68,68,.3)}
+.severity-badge.high{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.severity-badge.moderate{background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid rgba(34,211,238,.3)}
+.hazard-meta{display:flex;gap:16px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.hazard-status{font-size:10px;color:rgba(34,211,238,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hazard-corridor{font-size:10px;color:var(--text3);margin-bottom:4px}
+
+/* Globe Container */
+#cesiumContainer{width:100%;height:500px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#000}
+
+/* 72h Forecast */
+.forecast-region{margin-bottom:16px}
+.forecast-region-name{font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:4px}
+.forecast-corridor{font-size:10px;color:var(--text3);margin-bottom:8px}
+.forecast-table{width:100%;border-collapse:collapse}
+.forecast-table th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:6px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.forecast-table td{padding:6px 8px;font-size:12px;border-bottom:1px solid rgba(30,41,59,.5)}
+.forecast-table td:first-child{color:var(--text2);font-weight:500}
+.risk-cell{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px}
+.risk-low{color:var(--emerald)}
+.risk-med{color:var(--amber)}
+.risk-high{color:var(--orange)}
+.risk-critical{color:var(--rose)}
+
+/* Route Planner */
+.route-input-group{display:flex;gap:8px;margin-bottom:12px}
+.route-input{flex:1;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif}
+.route-input:focus{outline:none;border-color:var(--cyan)}
+.route-btn{padding:10px 20px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+.route-result{background:rgba(15,23,42,.7);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:12px}
+.route-waypoint{padding:8px 12px;border-left:3px solid var(--cyan);margin-bottom:8px;background:rgba(15,23,42,.5);border-radius:0 8px 8px 0}
+.route-wp-name{font-size:12px;font-weight:600;color:#fff}
+.route-wp-meta{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px}
+.route-wp-risk{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;margin-left:8px}
+
+/* Responsive */
+@media(max-width:900px){
+.grid-3,.grid-4{grid-template-columns:1fr 1fr}
+.grid-2{grid-template-columns:1fr}
+.banner{flex-direction:column}
+.header{flex-wrap:wrap;gap:8px}
+.header-right{flex-wrap:wrap}
+.tabs{flex-wrap:wrap}
+.tab-indicator{display:none}
+}
+@media(max-width:600px){
+.grid-3,.grid-4,.grid-2{grid-template-columns:1fr}
+.hazard-meta{flex-direction:column;gap:4px}
+}
+</style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav>
-        <a href="#" class="nav-brand">
-            <div class="nav-logo">🏔️</div>
-            <div class="nav-title">Grah<span>Raksha</span></div>
-        </a>
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#architecture">Architecture</a></li>
-            <li><a href="#problem">Problem</a></li>
-            <li><a href="#tech">Tech Stack</a></li>
-            <li><a href="https://github.com/pratyushaggarwal/Grahraksha" class="nav-cta">GitHub →</a></li>
-        </ul>
-    </nav>
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">🏔️</div>
+    <div class="brand">
+      <div class="brand-name">Grah<span>Raksha</span> <span style="font-size:11px;color:var(--text3);font-weight:400">v2.0</span></div>
+      <div class="brand-sub">Landslide Early-Warning & Regional Geospatial Analytics (RF • XGBoost • CNN • LSTM)</div>
+    </div>
+    <span class="badge">SIH 2026 (SIH26001)</span>
+  </div>
+  <div class="header-right">
+    <button class="header-btn" onclick="alert('🔔 Geofence Alert: Subscribe to receive real-time hazard alerts within 25km radius of your location.\n\nFeature requires backend server.')">🔔 25km Geofence Alert</button>
+    <button class="header-btn danger" onclick="alert('📍 Pin Hazard: Report a hazard sighting to community.\n\nFeature requires backend server.')">📍 Pin Hazard</button>
+    <button class="header-btn primary" onclick="alert('🤖 AI Risk Advisor powered by LLM.\n\nFeature requires backend server (FastAPI + OpenRouter).')">🤖 AI Risk Advisor</button>
+  </div>
+</div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-particles" id="particles"></div>
-        <div class="hero-content">
-            <div class="hero-badge">
-                <div class="dot"></div>
-                SIH 2026 — Problem Statement SIH26001
-            </div>
-            <h1>
-                <span class="gradient-text">GrahRaksha</span><br>
-                Landslide Risk<br>Early-Warning System
-            </h1>
-            <p>
-                AI-powered multi-model prediction engine with real-time geospatial monitoring 
-                for India's mountain corridors. Protecting lives through early detection, 
-                community alerts, and intelligent route planning.
-            </p>
-            <div class="hero-buttons">
-                <a href="https://github.com/pratyushaggarwal/Grahraksha" class="btn btn-primary">
-                    ⭐ View on GitHub
-                </a>
-                <a href="#features" class="btn btn-secondary">
-                    Explore Features ↓
-                </a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <div class="stat-value">5+</div>
-                    <div class="stat-label">ML Models</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">72h</div>
-                    <div class="stat-label">Forecast Window</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">3D</div>
-                    <div class="stat-label">Globe Visualization</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">Real-time</div>
-                    <div class="stat-label">Hazard Monitoring</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('globe')">🌐 3D Globe & Corridors</button>
+  <button class="tab" onclick="switchTab('route')">🗺️ Safe Route Planner</button>
+  <button class="tab" onclick="switchTab('assam')">⛰️ Assam & NER Pipeline</button>
+  <button class="tab" onclick="switchTab('forecast')">🔮 72h Threat Scanner</button>
+  <div class="tab-indicator">
+    <span class="status-dot"></span>
+    <span>RF+XGB+CNN+LSTM Online</span>
+    <span style="margin-left:12px">☑ Show 1,727 Historical Bhuvan Slides</span>
+  </div>
+</div>
 
-    <!-- Features Section -->
-    <section id="features">
-        <div class="section-header fade-in">
-            <div class="section-tag">Core Capabilities</div>
-            <h2 class="section-title">Intelligent Hazard Detection</h2>
-            <p class="section-desc">A comprehensive platform combining machine learning, geospatial analytics, and community engagement.</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card fade-in">
-                <div class="feature-icon green">🧠</div>
-                <h3>Multi-Model ML Engine</h3>
-                <p>Ensemble of 5+ machine learning models including XGBoost, Random Forest, and deep learning networks for accurate landslide risk prediction.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon blue">🌍</div>
-                <h3>3D Globe Visualization</h3>
-                <p>Interactive CesiumJS-powered 3D globe with real-time hazard markers, terrain analysis, and satellite imagery overlays for mountain corridors.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon amber">⚡</div>
-                <h3>Real-time Alert System</h3>
-                <p>Geofence-based subscriber alerts with SHA-256 OTP verification, email dispatch, and community reporting for rapid hazard response.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon red">🗺️</div>
-                <h3>Safe Route Planning</h3>
-                <p>AI-driven route optimization that avoids high-risk zones, with real-time weather integration and alternate path suggestions.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon purple">🤖</div>
-                <h3>AI Safety Advisor</h3>
-                <p>LLM-powered conversational advisor providing contextual safety recommendations, risk assessments, and emergency guidance.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <div class="feature-icon cyan">📊</div>
-                <h3>Assam Geospatial Pipeline</h3>
-                <p>Specialized regional analytics for Northeast India with district-level risk mapping, historical data analysis, and vulnerability scoring.</p>
-            </div>
-        </div>
-    </section>
+<!-- Main Content -->
+<div class="main">
 
-    <!-- Architecture Section -->
-    <section id="architecture" class="architecture">
-        <div class="section-header fade-in">
-            <div class="section-tag">System Design</div>
-            <h2 class="section-title">Architecture Overview</h2>
-            <p class="section-desc">Full-stack architecture built for scalability, real-time processing, and reliability.</p>
-        </div>
-        <div class="arch-container">
-            <div class="arch-flow fade-in">
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Frontend</div>
-                    <div class="arch-items">
-                        <span class="arch-chip">Next.js</span>
-                        <span class="arch-chip">React</span>
-                        <span class="arch-chip">TypeScript</span>
-                        <span class="arch-chip">CesiumJS</span>
-                        <span class="arch-chip">Tailwind CSS</span>
-                    </div>
-                </div>
-                <div class="arch-arrow">↕</div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">API Layer</div>
-                    <div class="arch-items">
-                        <span class="arch-chip">FastAPI</span>
-                        <span class="arch-chip">REST API</span>
-                        <span class="arch-chip">CORS Middleware</span>
-                        <span class="arch-chip">Pydantic</span>
-                    </div>
-                </div>
-                <div class="arch-arrow">↕</div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">ML Engine</div>
-                    <div class="arch-items">
-                        <span class="arch-chip">Scikit-learn</span>
-                        <span class="arch-chip">XGBoost</span>
-                        <span class="arch-chip">NumPy</span>
-                        <span class="arch-chip">Ensemble Models</span>
-                    </div>
-                </div>
-                <div class="arch-arrow">↕</div>
-                <div class="arch-layer">
-                    <div class="arch-layer-label">Data Layer</div>
-                    <div class="arch-items">
-                        <span class="arch-chip">SQLAlchemy</span>
-                        <span class="arch-chip">SQLite</span>
-                        <span class="arch-chip">GeoJSON</span>
-                        <span class="arch-chip">OpenRouter API</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ═══════════════ GLOBE TAB ═══════════════ -->
+<div class="panel active" id="panel-globe">
+  <div id="cesiumContainer"></div>
+  
+  <div style="margin-top:16px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🔴 Active Real-Time Hazard Watch Points</span>
+        <span class="card-badge">6 Active Nodes</span>
+      </div>
+      <div class="grid-3" id="hazardGrid"></div>
+    </div>
+  </div>
 
-    <!-- Problem Statement Section -->
-    <section id="problem" class="problem">
-        <div class="section-header fade-in">
-            <div class="section-tag">SIH 2026</div>
-            <h2 class="section-title">Problem Statement</h2>
-        </div>
-        <div class="problem-container fade-in">
-            <div class="problem-card">
-                <div class="problem-id">SIH26001</div>
-                <h3>Landslide Risk Early-Warning System for India's Mountain Corridors</h3>
-                <p>
-                    India's mountainous regions face significant landslide threats during monsoons, 
-                    affecting millions of lives and critical infrastructure. GrahRaksha addresses this 
-                    challenge by combining real-time weather data, geological surveys, satellite imagery, 
-                    and machine learning to provide actionable early warnings to at-risk communities.
-                </p>
-                <div class="problem-highlights">
-                    <div class="highlight-item">
-                        <div class="highlight-icon">🏔️</div>
-                        <div class="highlight-text">Mountain corridor monitoring across India</div>
-                    </div>
-                    <div class="highlight-item">
-                        <div class="highlight-icon">📡</div>
-                        <div class="highlight-text">Real-time satellite & weather integration</div>
-                    </div>
-                    <div class="highlight-item">
-                        <div class="highlight-icon">🔔</div>
-                        <div class="highlight-text">Community-level early warning alerts</div>
-                    </div>
-                    <div class="highlight-item">
-                        <div class="highlight-icon">🛡️</div>
-                        <div class="highlight-text">Predictive risk assessment engine</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div style="margin-top:16px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🛣️ Mountain Highway Corridors</span>
+        <span class="card-badge">5 Corridors Monitored</span>
+      </div>
+      <div class="grid-3" id="corridorGrid"></div>
+    </div>
+  </div>
+</div>
 
-    <!-- Tech Stack Section -->
-    <section id="tech">
-        <div class="section-header fade-in">
-            <div class="section-tag">Built With</div>
-            <h2 class="section-title">Technology Stack</h2>
-            <p class="section-desc">Modern, battle-tested technologies for reliability and performance.</p>
-        </div>
-        <div class="tech-grid fade-in">
-            <div class="tech-item">
-                <div class="tech-item-icon">⚡</div>
-                <h4>FastAPI</h4>
-                <p>Backend API</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">⚛️</div>
-                <h4>Next.js + React</h4>
-                <p>Frontend UI</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">🌐</div>
-                <h4>CesiumJS</h4>
-                <p>3D Globe</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">🧠</div>
-                <h4>Scikit-learn</h4>
-                <p>ML Models</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">🗄️</div>
-                <h4>SQLAlchemy</h4>
-                <p>ORM & Database</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">🔷</div>
-                <h4>TypeScript</h4>
-                <p>Type Safety</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">🎨</div>
-                <h4>Tailwind CSS</h4>
-                <p>Styling</p>
-            </div>
-            <div class="tech-item">
-                <div class="tech-item-icon">🐍</div>
-                <h4>Python</h4>
-                <p>Core Engine</p>
-            </div>
-        </div>
-    </section>
+<!-- ═══════════════ ROUTE TAB ═══════════════ -->
+<div class="panel" id="panel-route">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">🗺️ Safe Route Planner - Landslide-Aware Navigation</span>
+    </div>
+    <div class="route-input-group">
+      <select class="route-input" id="routeCorridor">
+        <option value="NH-58">NH-58: Rishikesh → Badrinath (Uttarakhand)</option>
+        <option value="NH-44">NH-44: Jammu → Srinagar (J&K)</option>
+        <option value="NH-5">NH-5: Shimla → Reckong Peo (Himachal Pradesh)</option>
+        <option value="NH-10">NH-10: Siliguri → Gangtok (Sikkim)</option>
+        <option value="NH-766">NH-766: Kozhikode → Kalpetta (Kerala)</option>
+      </select>
+      <button class="route-btn" onclick="showRoute()">Analyze Route Risk ⚡</button>
+    </div>
+    <div id="routeResult"></div>
+  </div>
+</div>
 
-    <!-- Team Section -->
-    <section id="team">
-        <div class="team-container fade-in">
-            <div class="team-info">
-                <h3>Built for Smart India Hackathon 2026</h3>
-                <p>An innovative solution for landslide risk mitigation and community safety across India's mountain corridors.</p>
-                <div class="team-links">
-                    <a href="https://github.com/pratyushaggarwal/Grahraksha" class="team-link">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        Source Code
-                    </a>
-                    <a href="https://github.com/pratyushaggarwal" class="team-link">
-                        👤 pratyushaggarwal
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ═══════════════ ASSAM TAB ═══════════════ -->
+<div class="panel" id="panel-assam">
+  <!-- Banner -->
+  <div class="banner" style="display:flex;align-items:center;justify-content:space-between">
+    <div style="position:relative;z-index:1">
+      <div class="banner-tags">
+        <span class="banner-tag green">ISRO Bhuvan + SRTM DEM 30M Pipeline</span>
+        <span class="banner-tag cyan">ASDMA / NDRF Decision Matrix</span>
+      </div>
+      <h2>⛰️ Assam & North Eastern Region (NER) Geospatial Analytics</h2>
+      <p>Automated landslide monitoring integrating 1,727 historical ground-truth inventories (2014, 2017, 2023), multi-source raster terrain derivatives, and temporal weather telemetry.</p>
+    </div>
+    <div class="banner-stat" style="position:relative;z-index:1">
+      <div class="banner-stat-val">1727</div>
+      <div class="banner-stat-label">Cataloged Slide Events</div>
+    </div>
+  </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>© 2026 GrahRaksha — Landslide Risk Early-Warning System | Built with ❤️ for <a href="#">SIH 2026</a></p>
-    </footer>
+  <!-- ML Models -->
+  <div class="grid-4" style="margin-top:16px">
+    <div class="model-card">
+      <div class="model-icon"><div class="model-dot" style="background:var(--cyan)"></div><h4>Spatial Random Forest</h4></div>
+      <p>Multi-variable terrain classification (Slope, Aspect, Elevation, Lithology).</p>
+      <div class="model-status">✅ CALIBRATED (94.2% ROC-AUC)</div>
+    </div>
+    <div class="model-card">
+      <div class="model-icon"><div class="model-dot" style="background:var(--blue)"></div><h4>Extreme Gradient Boost (XGB)</h4></div>
+      <p>Spatial Gradient Boosting with tree-pruned soil pore-water thresholds.</p>
+      <div class="model-status">✅ CALIBRATED (95.8% ROC-AUC)</div>
+    </div>
+    <div class="model-card">
+      <div class="model-icon"><div class="model-dot" style="background:var(--purple)"></div><h4>Spatial CNN Extractor</h4></div>
+      <p>16x16 DEM heightmap patch convolution for slope shear deformation detection.</p>
+      <div class="model-status">✅ DEPLOYED (16x16 DEM Kernel)</div>
+    </div>
+    <div class="model-card">
+      <div class="model-icon"><div class="model-dot" style="background:var(--amber)"></div><h4>Dynamic LSTM Forecaster</h4></div>
+      <p>Sequential recurrent forecasting for 72h antecedent rainfall & saturation curve.</p>
+      <div class="model-status">✅ ACTIVE (72h Sequential Infiltration)</div>
+    </div>
+  </div>
 
-    <script>
-        // Scroll animation observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
+  <!-- Environmental + Districts + LULC -->
+  <div class="grid-3" style="margin-top:16px">
+    <!-- Stress Indicators -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🔥 Regional Stress Indicators</span>
+        <span class="card-badge">Live Telemetry</span>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span class="progress-name">Brahmaputra Basin Saturation</span><span class="progress-val" style="color:var(--orange)">82.4%</span></div>
+        <div class="progress-bar"><div class="progress-fill orange" style="width:82.4%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span class="progress-name">Barak Valley Pore Pressure</span><span class="progress-val" style="color:var(--amber)">79.1%</span></div>
+        <div class="progress-bar"><div class="progress-fill amber" style="width:79.1%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span class="progress-name">Dima Hasao Hill Rail Corridor Risk</span><span class="progress-val" style="color:var(--rose)">88.5%</span></div>
+        <div class="progress-bar"><div class="progress-fill rose" style="width:88.5%"></div></div>
+      </div>
+      <div class="metrics-row">
+        <div class="metric-box"><span class="metric-label">Terrain Ruggedness (TRI)</span><span class="metric-val" style="color:var(--cyan)">184.2 m</span></div>
+        <div class="metric-box"><span class="metric-label">Topographic Wetness (TWI)</span><span class="metric-val" style="color:var(--blue)">8.7</span></div>
+      </div>
+    </div>
 
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    <!-- Districts -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📍 Vulnerable Districts (Historical Count)</span>
+      </div>
+      <div id="districtList"></div>
+    </div>
 
-        // Particle generator
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 6 + 's';
-            particle.style.animationDuration = (4 + Math.random() * 4) + 's';
-            particlesContainer.appendChild(particle);
-        }
+    <!-- LULC -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🌿 ISRO Bhuvan LULC Factor Analysis</span>
+      </div>
+      <div id="lulcList" style="display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+</div>
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+<!-- ═══════════════ FORECAST TAB ═══════════════ -->
+<div class="panel" id="panel-forecast">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">🔮 72-Hour Threat Forecast Scanner</span>
+      <span class="card-badge">Multi-Model Ensemble Prediction</span>
+    </div>
+    <div id="forecastContainer"></div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Cesium.js"></script>
+<script>
+// ─── DATA ─────────────────────────────────────────
+const CORRIDORS = {
+  "NH-58": {name:"NH-58 / NH-107 (Rishikesh - Badrinath / Kedarnath Highway)",state:"Uttarakhand",region:"Garhwal Himalayas",danger_level:"Critical",
+    waypoints:[{name:"Rishikesh",lat:30.0869,lon:78.2676,elevation_m:372,slope_deg:12},{name:"Byasi",lat:30.0898,lon:78.4382,elevation_m:460,slope_deg:28},{name:"Devprayag",lat:30.1459,lon:78.5989,elevation_m:610,slope_deg:35},{name:"Srinagar Garhwal",lat:30.2224,lon:78.7844,elevation_m:560,slope_deg:22},{name:"Sirobagarh (Chronic Slide)",lat:30.2451,lon:78.892,elevation_m:720,slope_deg:52},{name:"Rudraprayag",lat:30.2858,lon:78.9811,elevation_m:895,slope_deg:38},{name:"Karnaprayag",lat:30.26,lon:79.218,elevation_m:1050,slope_deg:40},{name:"Chamoli Gopeshwar",lat:30.4072,lon:79.3308,elevation_m:1300,slope_deg:39},{name:"Helang Active Slide",lat:30.5284,lon:79.5162,elevation_m:1550,slope_deg:56},{name:"Joshimath Subsidence",lat:30.5566,lon:79.5667,elevation_m:1890,slope_deg:46},{name:"Lambagar Torrential Slide",lat:30.651,lon:79.539,elevation_m:2400,slope_deg:54},{name:"Badrinath",lat:30.7433,lon:79.4938,elevation_m:3133,slope_deg:30}]},
+  "NH-44": {name:"NH-44 (Jammu - Srinagar National Highway)",state:"Jammu & Kashmir",region:"Pir Panjal Range",danger_level:"High",
+    waypoints:[{name:"Jammu Tawi",lat:32.7266,lon:74.857,elevation_m:327,slope_deg:10},{name:"Udhampur",lat:32.925,lon:75.1416,elevation_m:756,slope_deg:24},{name:"Chenani-Nashri Tunnel",lat:33.056,lon:75.291,elevation_m:1200,slope_deg:32},{name:"Ramban",lat:33.2428,lon:75.2444,elevation_m:1150,slope_deg:43},{name:"Mehar Shooting Stone Zone",lat:33.2562,lon:75.2415,elevation_m:1180,slope_deg:55},{name:"Cafeteria Morh Slide",lat:33.271,lon:75.238,elevation_m:1220,slope_deg:58},{name:"Digdol Rockfall",lat:33.312,lon:75.201,elevation_m:1350,slope_deg:61},{name:"Panthyal",lat:33.334,lon:75.19,elevation_m:1420,slope_deg:63},{name:"Banihal",lat:33.4286,lon:75.2033,elevation_m:1730,slope_deg:33},{name:"Srinagar",lat:34.0837,lon:74.7973,elevation_m:1585,slope_deg:8}]},
+  "NH-5": {name:"NH-5 (Hindustan-Tibet Road: Shimla - Kinnaur)",state:"Himachal Pradesh",region:"Kinnaur Himalayas",danger_level:"Critical",
+    waypoints:[{name:"Shimla",lat:31.1048,lon:77.1734,elevation_m:2206,slope_deg:25},{name:"Narkanda",lat:31.259,lon:77.4578,elevation_m:2708,slope_deg:32},{name:"Rampur Bushahr",lat:31.4497,lon:77.63,elevation_m:1005,slope_deg:38},{name:"Jhakri Hydro Project",lat:31.492,lon:77.701,elevation_m:1150,slope_deg:45},{name:"Nigulsari (2021 Landslide)",lat:31.5798,lon:77.989,elevation_m:1780,slope_deg:62},{name:"Urni Overhanging Cliff",lat:31.542,lon:78.143,elevation_m:1950,slope_deg:59},{name:"Karcham",lat:31.501,lon:78.216,elevation_m:1800,slope_deg:42},{name:"Reckong Peo",lat:31.5395,lon:78.2754,elevation_m:2290,slope_deg:36}]},
+  "NH-10": {name:"NH-10 (Siliguri - Gangtok)",state:"West Bengal / Sikkim",region:"Eastern Himalayas",danger_level:"High",
+    waypoints:[{name:"Siliguri",lat:26.7271,lon:88.3953,elevation_m:125,slope_deg:5},{name:"Sevoke Bridge",lat:26.883,lon:88.473,elevation_m:230,slope_deg:33},{name:"Kalijhora Rockslide",lat:26.938,lon:88.455,elevation_m:310,slope_deg:49},{name:"29th Mile (Chronic Zone)",lat:27.021,lon:88.435,elevation_m:420,slope_deg:58},{name:"Teesta Bazaar",lat:27.065,lon:88.428,elevation_m:210,slope_deg:44},{name:"Rangpo (Sikkim Entry)",lat:27.177,lon:88.531,elevation_m:330,slope_deg:31},{name:"Singtam",lat:27.234,lon:88.502,elevation_m:400,slope_deg:36},{name:"Gangtok",lat:27.3389,lon:88.6065,elevation_m:1650,slope_deg:28}]},
+  "NH-766": {name:"NH-766 (Wayanad Ghats)",state:"Kerala",region:"Western Ghats",danger_level:"High",
+    waypoints:[{name:"Kozhikode",lat:11.2588,lon:75.7804,elevation_m:15,slope_deg:4},{name:"Thamarassery",lat:11.417,lon:75.934,elevation_m:85,slope_deg:15},{name:"Churam Hairpin 5",lat:11.512,lon:76.021,elevation_m:480,slope_deg:47},{name:"Churam Hairpin 9",lat:11.528,lon:76.028,elevation_m:720,slope_deg:53},{name:"Lakkidi Pass",lat:11.515,lon:76.04,elevation_m:700,slope_deg:36},{name:"Chooralmala-Mundakkai",lat:11.524,lon:76.155,elevation_m:940,slope_deg:57},{name:"Kalpetta",lat:11.6103,lon:76.0827,elevation_m:780,slope_deg:20}]}
+};
+
+const HAZARDS = [
+  {id:"HAZ-UK-01",title:"Sirobagarh Chronic Slide",corridor:"NH-58 Rishikesh-Badrinath",state:"Uttarakhand",lat:30.2451,lon:78.892,severity:"Severe",risk_score:88,slope_deg:52.4,soil_moisture_pct:86.5,rainfall_3d_mm:142.8,displacement_rate_mm_hr:4.2,road_status:"Traffic restricted to one lane; SDRF standby",sensor_status:"CRITICAL_TILT_EXCEEDED"},
+  {id:"HAZ-HP-02",title:"Nigulsari Rockfall & Debris Flow",corridor:"NH-5 Hindustan-Tibet Road",state:"Himachal Pradesh",lat:31.5798,lon:77.989,severity:"Severe",risk_score:92,slope_deg:61.8,soil_moisture_pct:91.2,rainfall_3d_mm:185.0,displacement_rate_mm_hr:6.8,road_status:"Red Alert: Night travel prohibited",sensor_status:"PIEZOMETER_SATURATION_SPIKE"},
+  {id:"HAZ-JK-03",title:"Panthyal-Mehar Shooting Stone",corridor:"NH-44 Jammu-Srinagar",state:"Jammu & Kashmir",lat:33.334,lon:75.19,severity:"High",risk_score:79,slope_deg:63.0,soil_moisture_pct:74.0,rainfall_3d_mm:110.4,displacement_rate_mm_hr:2.9,road_status:"Convoy escorted; steel shed maintenance",sensor_status:"ACOUSTIC_EMISSION_DETECTED"},
+  {id:"HAZ-SK-04",title:"29th Mile Teesta Gorge Slide",corridor:"NH-10 Siliguri-Gangtok",state:"West Bengal / Sikkim",lat:27.021,lon:88.435,severity:"High",risk_score:75,slope_deg:57.5,soil_moisture_pct:82.0,rainfall_3d_mm:164.2,displacement_rate_mm_hr:3.1,road_status:"Heavy vehicles diverted via Lava-Gorubathan",sensor_status:"RIVER_TOE_EROSION_ELEVATED"},
+  {id:"HAZ-KL-05",title:"Chooralmala Debris Sector",corridor:"NH-766 Wayanad Ghats",state:"Kerala",lat:11.524,lon:76.155,severity:"Severe",risk_score:85,slope_deg:56.8,soil_moisture_pct:94.1,rainfall_3d_mm:210.6,displacement_rate_mm_hr:5.4,road_status:"DRF on site; early warning sirens armed",sensor_status:"PORE_WATER_PRESSURE_THRESHOLD"},
+  {id:"HAZ-AS-06",title:"Bongaigaon Valley Slip",corridor:"Assam Foothills Corridor",state:"Assam",lat:26.4056,lon:90.5785,severity:"Moderate",risk_score:58,slope_deg:38.0,soil_moisture_pct:69.5,rainfall_3d_mm:88.0,displacement_rate_mm_hr:0.8,road_status:"Normal transit; cautionary 30 km/h",sensor_status:"NORMAL_MONITORING"}
+];
+
+const DISTRICTS = {"Cachar":815,"Dima Hasao":245,"Kamrup":231,"Karbi Anglong":108,"Goalpara":78,"Jorhat":63,"Karimganj":47,"North Cachar Hills":42,"Nagaon":38,"Barpeta":31};
+const LULC = {"Evergreen / Semi evergreen":1097,"Deciduous":410,"Scrub land":98,"Scrub Forest":31,"Evergreen Closed Forest":24,"Plantation":14};
+
+const FORECAST = [
+  {region:"Garhwal & Kumaon Himalayas (Uttarakhand)",corridor:"NH-58 & NH-107",points:[
+    {name:"Chamoli-Joshimath",h0:55,h24:72,h48:86,h72:70,rain:112},
+    {name:"Devprayag-Sirobagarh",h0:68,h24:85,h48:91,h72:65,rain:135},
+    {name:"Lambagar-Badrinath",h0:60,h24:78,h48:89,h72:75,rain:128}]},
+  {region:"Kinnaur & Kullu High Belts (Himachal Pradesh)",corridor:"NH-5 & NH-3",points:[
+    {name:"Nigulsari-Urni",h0:75,h24:92,h48:96,h72:82,rain:160},
+    {name:"Rampur-Jhakri",h0:48,h24:66,h48:79,h72:62,rain:95}]},
+  {region:"Pir Panjal & Ramban Sector (J&K)",corridor:"NH-44",points:[
+    {name:"Ramban-Banihal Corridor",h0:62,h24:79,h48:84,h72:68,rain:105},
+    {name:"Nashri-Chanderkote",h0:42,h24:58,h48:65,h72:50,rain:72}]},
+  {region:"Teesta River Valley (Sikkim / West Bengal)",corridor:"NH-10",points:[
+    {name:"Kalijhora to 29th Mile",h0:64,h24:81,h48:88,h72:74,rain:145}]},
+  {region:"Wayanad Western Ghats Ridge (Kerala)",corridor:"NH-766",points:[
+    {name:"Thamarassery Churam - Chooralmala",h0:70,h24:88,h48:93,h72:80,rain:190}]}
+];
+
+// ─── RENDER FUNCTIONS ────────────────────────────
+function riskColor(v){return v>=85?'risk-critical':v>=70?'risk-high':v>=55?'risk-med':'risk-low'}
+function riskBg(v){return v>=85?'severe':v>=70?'high':'moderate'}
+function sevClass(s){return s==='Severe'?'severe':s==='High'?'high':'moderate'}
+
+// Hazard Grid
+document.getElementById('hazardGrid').innerHTML = HAZARDS.map(h=>`
+  <div class="hazard-card" onclick="flyTo(${h.lat},${h.lon})">
+    <div class="hazard-top">
+      <span class="hazard-title">${h.title}</span>
+      <span class="severity-badge ${sevClass(h.severity)}">${h.risk_score}/100</span>
+    </div>
+    <div class="hazard-corridor">${h.corridor} • ${h.state}</div>
+    <div class="hazard-meta">
+      <span>Slope: ${h.slope_deg}°</span>
+      <span>Moisture: ${h.soil_moisture_pct}%</span>
+      <span>Rain 3d: ${h.rainfall_3d_mm}mm</span>
+      <span>Disp: ${h.displacement_rate_mm_hr}mm/hr</span>
+    </div>
+    <div class="hazard-status">${h.road_status}</div>
+  </div>
+`).join('');
+
+// Corridor Grid
+document.getElementById('corridorGrid').innerHTML = Object.entries(CORRIDORS).map(([k,c])=>`
+  <div class="hazard-card" onclick="flyTo(${c.waypoints[Math.floor(c.waypoints.length/2)].lat},${c.waypoints[Math.floor(c.waypoints.length/2)].lon})">
+    <div class="hazard-top">
+      <span class="hazard-title">${c.name}</span>
+      <span class="severity-badge ${c.danger_level==='Critical'?'severe':'high'}">${c.danger_level}</span>
+    </div>
+    <div class="hazard-corridor">${c.state} • ${c.region}</div>
+    <div class="hazard-meta"><span>${c.waypoints.length} waypoints monitored</span></div>
+  </div>
+`).join('');
+
+// Districts
+document.getElementById('districtList').innerHTML = Object.entries(DISTRICTS).map(([d,c])=>`
+  <div style="margin-bottom:8px">
+    <div class="dist-row"><span class="dist-name">${d}</span><span class="dist-val">${c} slides</span></div>
+    <div class="dist-bar"><div class="dist-bar-fill" style="width:${Math.round(c/815*100)}%"></div></div>
+  </div>
+`).join('');
+
+// LULC
+document.getElementById('lulcList').innerHTML = Object.entries(LULC).map(([l,c])=>`
+  <div class="lulc-item"><span class="lulc-name">${l}</span><span class="lulc-badge">${c} occurrences</span></div>
+`).join('');
+
+// Forecast
+document.getElementById('forecastContainer').innerHTML = FORECAST.map(f=>`
+  <div class="forecast-region">
+    <div class="forecast-region-name">${f.region}</div>
+    <div class="forecast-corridor">Corridor: ${f.corridor}</div>
+    <table class="forecast-table">
+      <thead><tr><th>Location</th><th>Now</th><th>+24h</th><th>+48h</th><th>+72h</th><th>Rain (mm)</th></tr></thead>
+      <tbody>${f.points.map(p=>`<tr>
+        <td>${p.name}</td>
+        <td class="risk-cell ${riskColor(p.h0)}">${p.h0}%</td>
+        <td class="risk-cell ${riskColor(p.h24)}">${p.h24}%</td>
+        <td class="risk-cell ${riskColor(p.h48)}">${p.h48}%</td>
+        <td class="risk-cell ${riskColor(p.h72)}">${p.h72}%</td>
+        <td class="risk-cell" style="color:var(--blue)">${p.rain}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>
+`).join('');
+
+// ─── TAB SWITCHING ────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  event.target.closest('.tab').classList.add('active');
+}
+
+// ─── ROUTE PLANNER ────────────────────────────
+function showRoute(){
+  const sel=document.getElementById('routeCorridor').value;
+  const c=CORRIDORS[sel];
+  const html=`
+    <div class="route-result">
+      <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+        <div><strong style="color:var(--cyan)">${c.name}</strong><br><span style="font-size:11px;color:var(--text3)">${c.state} • ${c.region}</span></div>
+        <span class="severity-badge ${c.danger_level==='Critical'?'severe':'high'}">${c.danger_level}</span>
+      </div>
+      ${c.waypoints.map((w,i)=>{
+        const riskLevel=w.slope_deg>=55?'Critical':w.slope_deg>=40?'High':w.slope_deg>=25?'Moderate':'Low';
+        const riskClr=w.slope_deg>=55?'background:rgba(239,68,68,.15);color:var(--rose)':w.slope_deg>=40?'background:rgba(245,158,11,.15);color:var(--amber)':w.slope_deg>=25?'background:rgba(34,211,238,.15);color:var(--cyan)':'background:rgba(52,211,153,.15);color:var(--emerald)';
+        return `<div class="route-waypoint" style="border-color:${w.slope_deg>=55?'var(--rose)':w.slope_deg>=40?'var(--amber)':'var(--cyan)'}">
+          <div class="route-wp-name">${i+1}. ${w.name} <span class="route-wp-risk" style="${riskClr}">${riskLevel}</span></div>
+          <div class="route-wp-meta">Elev: ${w.elevation_m}m • Slope: ${w.slope_deg}° • ${w.lat.toFixed(4)}°N, ${w.lon.toFixed(4)}°E</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  document.getElementById('routeResult').innerHTML=html;
+}
+
+// ─── CESIUM 3D GLOBE ────────────────────────────
+let viewer;
+function flyTo(lat,lon){
+  if(viewer){
+    viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(lon,lat,80000),duration:2});
+  }
+}
+
+try{
+  Cesium.Ion.defaultAccessToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2OGI5MThhOC04YjRkLTRjYzQtYTkyZi0zNzBhNjFkMjljMjAiLCJpZCI6MjY1MDM0LCJpYXQiOjE3MzUxMzAzNDR9.r5GVsEdBOPjPBpghmILrCi2KBa0n33zoJKsr9FqXIJo';
+  viewer=new Cesium.Viewer('cesiumContainer',{
+    terrain:Cesium.Terrain.fromWorldTerrain(),
+    baseLayerPicker:false,timeline:false,animation:false,homeButton:false,
+    sceneModePicker:true,navigationHelpButton:false,fullscreenButton:true,
+    geocoder:false,infoBox:true,selectionIndicator:true
+  });
+  viewer.scene.globe.enableLighting=true;
+
+  // Add hazard markers
+  HAZARDS.forEach(h=>{
+    const color=h.severity==='Severe'?Cesium.Color.RED:h.severity==='High'?Cesium.Color.ORANGE:Cesium.Color.YELLOW;
+    viewer.entities.add({
+      position:Cesium.Cartesian3.fromDegrees(h.lon,h.lat,500),
+      point:{pixelSize:12,color:color,outlineColor:Cesium.Color.WHITE,outlineWidth:2},
+      label:{text:h.title,font:'12px Inter',fillColor:Cesium.Color.WHITE,style:Cesium.LabelStyle.FILL_AND_OUTLINE,outlineWidth:2,outlineColor:Cesium.Color.BLACK,verticalOrigin:Cesium.VerticalOrigin.BOTTOM,pixelOffset:new Cesium.Cartesian2(0,-16)},
+      description:`<div style="font-family:Inter,sans-serif;padding:8px"><h3>${h.title}</h3><p><b>Risk Score:</b> ${h.risk_score}/100</p><p><b>Slope:</b> ${h.slope_deg}°</p><p><b>Soil Moisture:</b> ${h.soil_moisture_pct}%</p><p><b>Rainfall (3d):</b> ${h.rainfall_3d_mm}mm</p><p><b>Displacement:</b> ${h.displacement_rate_mm_hr} mm/hr</p><p><b>Sensor:</b> ${h.sensor_status}</p><p><b>Road:</b> ${h.road_status}</p></div>`
+    });
+  });
+
+  // Add corridor polylines
+  Object.values(CORRIDORS).forEach(c=>{
+    const positions=[];
+    c.waypoints.forEach(w=>positions.push(Cesium.Cartesian3.fromDegrees(w.lon,w.lat,w.elevation_m+100)));
+    viewer.entities.add({
+      polyline:{positions:positions,width:3,material:new Cesium.PolylineGlowMaterialProperty({glowPower:.3,color:c.danger_level==='Critical'?Cesium.Color.RED:Cesium.Color.ORANGE}),clampToGround:false}
+    });
+  });
+
+  // Fly to India
+  viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(79,25,3500000),duration:0});
+}catch(e){
+  document.getElementById('cesiumContainer').innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);flex-direction:column;gap:8px"><span style="font-size:48px">🌐</span><span>3D Globe requires CesiumJS. View works best with Cesium Ion access token.</span></div>';
+}
+
+// Show route on load
+showRoute();
+</script>
 </body>
 </html>
